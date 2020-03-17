@@ -1,0 +1,1 @@
+Saida do programa que executa system calls de gerenciamento de memoria e arquivos.
