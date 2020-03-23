@@ -7,7 +7,7 @@
 
 //A system call munmap(void *addr, size_t length) desaloca um espaço da memória virtaul, possuindo como argumentos o endereço da memória virtual a ser liberada e o da tamanho da memória
 
-//system calls envolvidas(tempo em segundos.10^(-6)): execve(28); brk(103); access(209); openat(97); fstat(34); mmap(127); close(17); read(17); mprotect(177); arch_prctl(21); munmap(92); write(48);
+//system calls envolvidas(tempo em microssegundos): execve(28); brk(103); access(209); openat(97); fstat(34); mmap(127); close(17); read(17); mprotect(177); arch_prctl(21); munmap(92); write(48);
 
 #include <stdio.h>
 #include <stdlib.h>
