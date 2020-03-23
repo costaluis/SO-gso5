@@ -3,7 +3,7 @@
 //Programa que exemplifica a utilização da system call mkdir(const char *pathname, mode_t mode), que possui como primeiro argumento o local que irá conter o novo diretório,
 //e segundo argumento o modo, que determina a permissão de acesso ao diretório.
 
-//system calls envolvidas: execve(); brk(); access(); openat(); fstat(); mmap(); close(); read(); mprotect(); arch_prctl(); munmap(); write(); read(); mkdir(); lseek(); exit_group();
+//system calls envolvidas(tempo em microssegundos): execve(0); brk(8); access(0); openat(0); fstat(7); mmap(36); close(3); read(50); mprotect(28); arch_prctl(4); munmap(16); write(49); read(50); mkdir(282); lseek(13);
 
 //Chamadas de bibliotecas
 #include <stdio.h>
