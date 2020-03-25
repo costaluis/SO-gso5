@@ -1,0 +1,29 @@
+﻿execve() => executa o programa que aponta para um arquivo, este, deve ser um executável binário ou um script começando com a linha da forma : #! interpreter [optional-arg] . No caso de sucesso, a system call não retorna, caso contrário, -1.
+
+
+brk() => muda a localização do "program break", que define o final do segmento de dados do processo, tendo o efeito de alocar mais memória para o processo. No caso de sucesso, a system call retorna 0, caso contrário, -1.
+
+
+access() => checa se o processo chamado pode acessar o caminho para o arquivo, se o caminho é um "symbolic link", ou seja, arquivos que agem como ponteiros para outros arquivos, este é desreferenciado. No caso de sucesso, a system call retorna 0, caso contrário, -1. 
+
+
+openat() => Dado o caminho para o arquivo, retorna um "file descriptor", que é um inteiro não negativo usado para acessar um arquivo ou outro recurso de entrada e saída, ou, mais especificamente, como index da “File Description Table”.
+Se o caminho para o arquivo é relativo, então, este caminho é interpretado em relação ao diretório referido por um file descriptor argumento da system call openat(), ao invés de interpretar em relação ao diretório atual, como a system call open() faz.
+
+
+fstat() => Obtém informação sobre um arquivo aberto e associado com o file descriptor argumento da system call. No caso de sucesso, a system call retorna 0, caso contrário, -1.
+
+
+read() => Lê um certo número de bytes a partir de um file descriptor, colocando a informação em um buffer.  No caso de sucesso, a system call retorna o número de bytes lidos, caso contrário, -1.
+
+
+write() => Escreve um certo número de bytes a partir de um buffer em um arquivo referenciado por um file descriptor.  No caso de sucesso, a system call retorna o número de bytes escritos, caso contrário, -1.
+
+
+close() => Desaloca um file descriptor, tornando-o disponível à outras funções que alocam file descriptors. No caso de sucesso, a system call retorna 0, caso contrário, -1.
+
+
+arch_prctl() => Estabelece um processo de arquitetura específica ou o estado de um thread. No caso de sucesso, a system call retorna 0, caso contrário, -1.
+
+
+lseek() => Reposiciona o offset de um arquivo aberto para outra parte do arquivo.  No caso de sucesso, a system call retorna o novo offset, medido em bytes a partir do começo do arquivo, caso contrário, -1.
