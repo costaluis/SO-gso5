@@ -13,7 +13,7 @@ int main(){
 	//definição da string que ira conter o endereço onde sera criado o novo diretorio
 	char nome[50];
 	printf("Endereço do diretorio a ser criado:");
-	//coleta do endereço; deverá ser o endereço de onde a pasta será criada mais o nome da nova pasta (ex:/home/usuariopc/novapasta)
+	//coleta do endereço; deverá ser o endereço de onde a pasta será criada mais o nome da nova pasta (ex:/home/gso05/novapasta)
 	scanf("%s", nome);
 	//executará a system call mkdir e s receberá sua saída, sendo igual a -1 se o diretório nao for criado e igual a 0 se for criado
 	int s=mkdir(nome, S_IRWXU|S_IRWXG|S_IRWXO);
