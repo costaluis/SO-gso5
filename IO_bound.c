@@ -1,4 +1,4 @@
-//Algoritmo IO-bound que inicialmente escreve "sistemas_operacionais__" em um arquivo e em seguida entra em um loop de escrever no final do arquivo tudo o que já foi escrito no arquivo
+//Algoritmo IO-bound que inicialmente escreve "sistemas_operacionais__" em um arquivo e em seguida entra em um loop de escrever na tela e no final do arquivo tudo o que já foi escrito no arquivo
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +28,8 @@ int main(){
 		fclose(p);
 		//abertura do arquivo para escrita no final do arquivo
 		p = fopen("IO.txt", "a");
+		//escrevendo na tela
+		printf("%s\n", texto);
 		//escrevendo no arquivo
 		fputs(texto, p);
 		fclose(p);
