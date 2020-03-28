@@ -9,10 +9,13 @@
 #include <unistd.h>
 
 int main(){
-	char nome[50];//definição da string que ira conter o endereço do diretório a ser removido
+	//definição da string que ira conter o endereço do diretório a ser removido
+	char nome[50];
 	printf("Endereço do diretório a ser removido:");
-	scanf("%s", nome);//coleta do endereço
-	int s=rmdir(nome);//executará a system call rmdir e s receberá sua saída, sendo igual a 0 se o diretório for removido e igual a -1 se a remoção não for possível
+	//coleta do endereço (ex:/home/gso05/pasta)
+	scanf("%s", nome);
+	//executará a system call rmdir e s receberá sua saída, sendo igual a 0 se o diretório for removido e igual a -1 se a remoção não for possível
+	int s=rmdir(nome);
 	if(s==0){
 		printf("Diretorio removido\n");
 	}else{
