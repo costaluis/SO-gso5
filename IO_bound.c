@@ -20,7 +20,7 @@ int main(){
 	fputs(texto, p);
 	fclose(p);
 
-	for(i=0; i<15; i++){
+	for(i=0; i<25; i++){
 		//abertura do arquivo para leitura
 		p = fopen("IO.txt", "r");
 		//armazenar o que já foi escrito no arquivo na string "texto"
