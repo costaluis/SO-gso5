@@ -13,19 +13,20 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
-#define PAGESIZE 4096//o tamanho da pagina de endereçamento de um computador pode ser obtida através do comando "getconf PAGE_SIZE", a maioria dos computadores usam 4KB assim como a maquina virtual usada
+//o tamanho da pagina de endereçamento de um computador pode ser obtida através do comando "getconf PAGE_SIZE", a maioria dos computadores usam 4KB assim como a maquina virtual usada
+#define PAGESIZE 4096
 
 int main(){
-	//
-	int *e = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);//mmap retornara um ponteiro com o endereço da memoria alocada ou com -1
+	//mmap retornara um ponteiro com o endereço da memoria alocada ou com -1
+	int *e = mmap(NULL, PAGESIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 	if(e==(void *) -1){
 		printf("Erro no mapeamento de memória \n");
 	}else{
 		printf("Endereço de memória virtual mapeado:%p \n", e);
 	}
 
-	//
-	int p = mprotect(e, PAGESIZE, PROT_READ);//mprotect retornara -1 se nao for possivel alterar a proteção e 0 se conseguir
+	//mprotect retornara 0 se alterar a proteção e -1 caso contrário
+	int p = mprotect(e, PAGESIZE, PROT_READ);
 	if(p==0){
 		printf("Proteção da pagina mudado para apenas leitura \n");
 	}
@@ -33,8 +34,8 @@ int main(){
 		printf("Não foi possível alterar a proteção da pagina \n");
 	}
 
-	//
-	int s = munmap(e, PAGESIZE);//munmap retornara 0 se for possivel liberar a memoria e -1 caso contrário
+	//munmap retornara 0 se for possivel liberar a memoria e -1 caso contrário
+	int s = munmap(e, PAGESIZE);
 	if(s==0){
 		printf("Mapeamento da pagina %p excluido \n", e);
 	}
