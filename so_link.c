@@ -2,7 +2,7 @@
 
 //Programa que exemplifica a utilização da system call link(const char *path1, const char *path2), que possui como primeiro argumento a localização do arquivo a receber uma nova entrada, e segundo argumento o local que conterá a nova entrada
 
-//system calls envolvidas(os tempos de execução das system calls nesta aplicação são todos menores que 1 microssegundo): execve(); brk(); access(); openat(); fstat(); mmap(); close(); read(); mprotect(); arch_prctl(); munmap(); write(); link(); lseek();
+//system calls envolvidas(tempo em microssegundo):read(tempo de input do usuário);execve(251);write(158);mmap(84);link(79);mprotect(78);fstat(53);access(47);brk(39);openat(36);munmap(35);close(25);lseek(18);arch_prctl(12);
 
 //Chamadas de bibliotecas
 #include <stdio.h>
