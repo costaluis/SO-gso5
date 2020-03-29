@@ -1,5 +1,5 @@
 //Programa que realiza system calls de gerenciamento de processos.
-//clone(), wait4(), exit_group()
+//clone(), wait4(), kill()
 
 //A syscall clone() cria um novo processo (“filho”) idêntico ao “pai”, com diferenças apenas no PID e no espaço de endereçamento de memória. Age como um wrapper da syscall “fork()”, utilizada explicitamente no código. 
 
