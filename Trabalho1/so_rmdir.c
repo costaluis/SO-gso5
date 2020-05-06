@@ -2,7 +2,7 @@
 
 //Programa que exemplifica a utilização da system call rmdir(const char *path), que possui como único argumento o local do diretório vazio a ser removido
 
-//system calls envolvidas(tempo em microssegundos): execve(0); brk(13); access(0); openat(0); fstat(11); mmap(0); close(0); read(124); mprotect(41); arch_prctl(0); munmap(26); write(53); rmdir(224); lseek(13);
+//system calls envolvidas(tempo em microssegundos):read(tempo de input do usuário);execve(352);write(196);rmdir(133);mmap(88);mprotect(81);fstat(55);access(48);brk(41);munmap(38);openat(37);close(25);lseek(18);arch_prctl(12);
 
 //Chamada das bibliotecas
 #include <stdio.h>
