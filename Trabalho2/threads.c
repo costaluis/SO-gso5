@@ -82,6 +82,7 @@ int main(){
     free(buffer->free_addr);
     free(buffer->ocup_addr);
     pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&condition_var);
 
     exit(EXIT_SUCCESS);
 }
