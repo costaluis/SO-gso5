@@ -1,3 +1,7 @@
+//João Pedro Borges de Castro - 10276720
+//João Pedro Fidelis Belluzzo - 10716661
+//Luis Fernando Costa de Oliveira - 10716532
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
