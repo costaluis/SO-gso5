@@ -8,7 +8,7 @@
 #include <stack>
 using namespace std;
 
-#define TAM_MEM_P 500
+#define TAM_MEM_P 100
 #define TAM_MEM_S 20000
 #define PAG_SIZE 100
 
@@ -44,7 +44,7 @@ public:
     int pont;
     lista_circular();
     ~lista_circular();
-    void carrega_mem(processo * proc, pagina * pag, vector<processo*> & processos);
+    void carrega_mem(processo * proc, pagina * pag, vector<processo*> & processos,int flag);
 };
 
 class mem
@@ -96,20 +96,31 @@ lista_circular::~lista_circular()
 {
 }
 
-void lista_circular::carrega_mem(processo * proc, pagina * pag, vector<processo*> & processos){
+void lista_circular::carrega_mem(processo * proc, pagina * pag, vector<processo*> & processos, int flag){
     pagina * aux = new pagina();
     int aux2;
     *aux = *pag;
     aux->R = 1;
     if(mem_p.size() < TAM_MEM_P/PAG_SIZE){
+        cout << "   Memória principal não está cheia." << endl;
         mem_p.push_back(aux);
         proc->tabela_paginas[pag] = aux;
+        cout << "   Página carregada na memória principal." << endl;
     }else{
+        int i, j;
+        map<pagina*,pagina*>::iterator it;
+        cout << "   Memória principal cheia." << endl;
+        if(flag){
+            cout << "\n   Algorimo LRU em execução..." << endl;
+        }else{
+            cout << "\n   Algorimo do relógio em execução..." << endl;
+        }
+        
         while(true){
             if(mem_p[pont]->R == 0){
-                for(int i=0; i<processos.size(); i++){
+                for(i=0; i<processos.size(); i++){
                     if(processos[i]->id == mem_p[pont]->process_id){
-                        for(map<pagina*,pagina*>::iterator it = processos[i]->tabela_paginas.begin(); it != processos[i]->tabela_paginas.end(); it++){
+                        for(it = processos[i]->tabela_paginas.begin(); it != processos[i]->tabela_paginas.end(); it++){
                             if(it->second == mem_p[pont]){
                                 it->second = NULL;
                                 break;
@@ -120,26 +131,35 @@ void lista_circular::carrega_mem(processo * proc, pagina * pag, vector<processo*
                 }
                 mem_p[pont] = aux;
                 proc->tabela_paginas[pag] = aux;
+                
+                for(j = 0; j < processos[i]->paginas.size(); j++){
+                    if(processos[i]->paginas[j] == it->first){
+                        break;
+                    }
+                }
+                cout << "     > Página a ser substituída: página " << (j)*PAG_SIZE << "~" << (j+1)*PAG_SIZE -1 << " do Processo " << i+1 << "\n" << endl;
+
                 break;
             }else{
                 mem_p[pont]->R--;
                 pont++;
-                pont = pont % TAM_MEM_P/PAG_SIZE;
+                pont = pont % (TAM_MEM_P/PAG_SIZE);
             }
         }
         pont++;
-        pont = pont % TAM_MEM_P/PAG_SIZE;
+        pont = pont % (TAM_MEM_P/PAG_SIZE);
     }
-    cout << "Terminei" << endl;
 } 
 
 processo * cria_processo(int id, int tam, mem & mem_s){
     processo * x = new processo(id,tam);
     int num_pag = ceil(tam/PAG_SIZE);
     if(num_pag <= (TAM_MEM_S/PAG_SIZE - mem_s.paginas_mem.size())){
+        cout << "   Memória secundária não está cheia." << endl;
         for(int i=0; i< x->paginas.size(); i++){
             mem_s.paginas_mem.push_back(x->paginas[i]);
         }
+        cout << "   Processo " << id << " criado e alocado na memória virtual com sucesso." << endl;
     }
     return x;
 }
@@ -158,8 +178,9 @@ void * le(int iden, int end, vector<processo*> & processos, lista_circular & mem
     
     aux2 = aux->paginas[pag];
     if(aux->tabela_paginas[aux2] == NULL){
-        mem_p.carrega_mem(aux,aux2,processos);
+        mem_p.carrega_mem(aux,aux2,processos,1);
     }else{
+        cout << "   Página já está na memória principal." << endl;
         if(flag == 1){
             aux->tabela_paginas[aux2]->R++;
         }
@@ -167,7 +188,7 @@ void * le(int iden, int end, vector<processo*> & processos, lista_circular & mem
 
     dado = aux->tabela_paginas[aux2];
 
-    cout << dado->dados[pos] << endl;
+    cout << "   Dado lido: " << dado->dados[pos] << endl;
     
 }
 
@@ -185,8 +206,9 @@ void * escreve(int iden, int end, vector<processo*> & processos, lista_circular 
     
     aux2 = aux->paginas[pag];
     if(aux->tabela_paginas[aux2] == NULL){
-        mem_p.carrega_mem(aux,aux2,processos);
+        mem_p.carrega_mem(aux,aux2,processos,1);
     }else{
+        cout << "   Página já está na memória principal." << endl;
         if(flag == 1){
             aux->tabela_paginas[aux2]->R++;
         }
@@ -197,7 +219,8 @@ void * escreve(int iden, int end, vector<processo*> & processos, lista_circular 
     dado->dados[pos] = '*';
     aux2->dados[pos] = '*';
     
-    cout << "Dado escrito: " << dado->dados[pos] << endl;
+    cout << "   Dado escrito: " << dado->dados[pos] << endl;
+    cout << "   Atualização da memória secundária realizada." << endl;
 }
 
 mem::mem(int tam)
@@ -236,20 +259,20 @@ int main(){
     char inst;
     int tam, proc;
     while(!le_arq(arq,proc,inst,tam)){
-        cout << "Processo: " << proc << " Instrucao: " << inst << " End: " << tam << endl;
+        cout << "--> Processo: " << proc << " | " << " Instrucao: " << inst << " | " << " Endereço/Tamanho: " << tam << endl;
         switch (inst)
         {
         case 'C':
             tabela_processos.push_back(cria_processo(proc,tam,mem_s));
-            //getchar();
+            getc(stdin);
             break;
         case 'R':
             le(proc,tam,tabela_processos,*mem_p,1);
-            //getchar();
+            getc(stdin);
             break;
         case 'W':
             escreve(proc,tam,tabela_processos,*mem_p,1);
-            //getchar();
+            getc(stdin);
             break;
         default:
             cout << "To fazendo nada" << endl;
