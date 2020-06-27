@@ -27,8 +27,8 @@ public:
 class processo
 {
 private:
-    int tam;
 public:
+    int tam;
     int id;
     vector<pagina*> paginas;
     map<pagina*,pagina*> tabela_paginas;
@@ -151,7 +151,7 @@ void lista_circular::carrega_mem(processo * proc, pagina * pag, vector<processo*
     }
 } 
 
-processo * cria_processo(int id, int tam, mem & mem_s){
+processo * cria_processo(int id, int tam, mem & mem_s, vector<int> & proc_susp){
     processo * x = new processo(id,tam);
     int num_pag = ceil(tam/PAG_SIZE);
     if(num_pag <= (TAM_MEM_S/PAG_SIZE - mem_s.paginas_mem.size())){
@@ -160,14 +160,50 @@ processo * cria_processo(int id, int tam, mem & mem_s){
             mem_s.paginas_mem.push_back(x->paginas[i]);
         }
         cout << "   Processo " << id << " criado e alocado na memória virtual com sucesso." << endl;
+    }else{
+        proc_susp.push_back(id);
+        cout << "   Memoria secundaria cheia." << endl << "   Processo suspenso." << endl;
     }
     return x;
 }
 
-void * le(int iden, int end, vector<processo*> & processos, lista_circular & mem_p, int flag){
+
+bool tranf_ver(vector<processo*> processos, int & end, int proc, vector<int> & proc_susp){
+    for(int i=0; i<processos.size(); i++){
+        if(processos[i]->paginas.size()*100 >= end){
+            if(processos[i]->id == proc){
+                for(int j=0; j<proc_susp.size(); j++){
+                    if(proc_susp[j]==proc){
+                        cout << "   Processo " << proc << " esta suspenso." << endl;
+                        return false;
+                    }
+                }
+                return true;
+            }else{
+                cout << "   Endereco nao pertence ao processo!" << endl;
+                proc_susp.push_back(proc);
+                cout << "   Processo " << proc << " suspenso." << endl;
+                return false;
+            }
+        }else{
+            end -= processos[i]->paginas.size()*100;
+        }
+    }
+    cout << "   Endereco nao pertence ao processo!" << endl;
+    proc_susp.push_back(proc);
+    cout << "   Processo " << proc << " suspenso." << endl;
+    return false;
+}
+
+
+
+void le(int iden, int end, vector<processo*> & processos, lista_circular & mem_p, int flag, vector<int> & proc_susp){
     processo * aux;
     pagina * aux2;
     pagina * dado;
+    if(!tranf_ver(processos,end,iden,proc_susp)){
+        return;
+    }
     for(int i=0; i<processos.size(); i++){
         if(processos[i]->id == iden){
             aux = processos[i];
@@ -192,10 +228,13 @@ void * le(int iden, int end, vector<processo*> & processos, lista_circular & mem
     
 }
 
-void * escreve(int iden, int end, vector<processo*> & processos, lista_circular & mem_p, int flag){
+void escreve(int iden, int end, vector<processo*> & processos, lista_circular & mem_p, int flag,vector<int> & proc_susp){
     processo * aux;
     pagina * aux2;
     pagina * dado;
+    if(!tranf_ver(processos,end,iden,proc_susp)){
+        return;
+    }
     for(int i=0; i<processos.size(); i++){
         if(processos[i]->id == iden){
             aux = processos[i];
@@ -223,6 +262,47 @@ void * escreve(int iden, int end, vector<processo*> & processos, lista_circular 
     cout << "   Atualização da memória secundária realizada." << endl;
 }
 
+void inst_CPU(vector<int> proc_susp, vector<processo*> processos, int id, int inst){
+    bool flag = false;
+    for(int i=0; i<proc_susp.size(); i++){
+        if(proc_susp[i]==id){
+            cout << "   Processo " << id << " esta suspenso." << endl;
+            return;
+        }
+    }
+    for(int i=0; i<processos.size(); i++){
+        if(processos[i]->id == id){
+            flag = true;
+        }
+    }
+    if(!flag){
+        cout << "   Processo " << id << " nao existe." << endl;
+        return;
+    }
+
+    cout << "   Processo " << id << " executou a instrucao " << inst << " pela CPU." << endl;
+}
+
+void inst_IO(vector<int> proc_susp, vector<processo*> processos, int id, int inst){
+    bool flag = false;
+    for(int i=0; i<proc_susp.size(); i++){
+        if(proc_susp[i]==id){
+            cout << "   Processo " << id << " esta suspenso." << endl;
+            return;
+        }
+    }
+    for(int i=0; i<processos.size(); i++){
+        if(processos[i]->id == id){
+            flag = true;
+        }
+    }
+    if(!flag){
+        cout << "   Processo " << id << " nao existe." << endl;
+        return;
+    }
+    cout << "   Processo " << id << " executou a instrucao " << inst << " de IO." << endl;
+}
+
 mem::mem(int tam)
 {
     mem::tam = tam;
@@ -242,13 +322,12 @@ int le_arq(FILE * arq, int& proc, char & inst, int & tam){
     return 0;
 }
 
-
-
 int main(){
     cout << " --- Simulador de gerenciamento de memória virtual com paginação --- \n\n";
     lista_circular * mem_p = new lista_circular();
     mem mem_s(TAM_MEM_S);
     vector<processo*> tabela_processos;
+    vector<int> processos_suspensos;
     FILE * arq;
     arq = fopen("entrada.txt","rt");
     if(arq == NULL){
@@ -263,19 +342,25 @@ int main(){
         switch (inst)
         {
         case 'C':
-            tabela_processos.push_back(cria_processo(proc,tam,mem_s));
+            tabela_processos.push_back(cria_processo(proc,tam,mem_s,processos_suspensos));
             getc(stdin);
             break;
         case 'R':
-            le(proc,tam,tabela_processos,*mem_p,1);
+            le(proc,tam,tabela_processos,*mem_p,1,processos_suspensos);
             getc(stdin);
             break;
         case 'W':
-            escreve(proc,tam,tabela_processos,*mem_p,1);
+            escreve(proc,tam,tabela_processos,*mem_p,1,processos_suspensos);
             getc(stdin);
             break;
+        case 'I':
+            inst_IO(processos_suspensos,tabela_processos,proc,tam);
+            break;
+        case 'P':
+            inst_CPU(processos_suspensos,tabela_processos,proc,tam);
+            break;
         default:
-            cout << "To fazendo nada" << endl;
+            cout << "Instrucao invalida!" << endl;
             break;
         }
     }
