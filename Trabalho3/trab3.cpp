@@ -292,8 +292,8 @@ void escreve(int iden, int end, vector<processo*> & processos, lista_circular & 
 
     dado = aux->tabela_paginas[aux2];
 
-    dado->dados[pos] = '*';                         //escreve na memória secundaria
-    aux2->dados[pos] = '*';                         //escreve na memória primaria
+    dado->dados[pos] = '*';                         //escreve na memória primaria
+    aux2->dados[pos] = '*';                         //escreve na memória secundaria
     
     cout << "   Dado escrito: " << dado->dados[pos] << endl;
     cout << "   Atualização da memória secundária realizada." << endl;
