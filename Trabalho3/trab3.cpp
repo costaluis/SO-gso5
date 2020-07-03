@@ -337,7 +337,7 @@ void inst_IO(vector<int> proc_susp, vector<processo*> processos, int id, int ins
 
 // Função para leitura do arquivo de entrada
 int le_arq(FILE * arq, int& proc, char & inst, int & tam){
-    char aux[5];                                            // string armazenará o processo, exemplo: P7
+    char aux[5];                                            // string armazenará o nome do processo, exemplo: P7
 
     if(fscanf(arq,"%s %c %d", aux, &inst, &tam) == EOF){    // lê uma linha do arquivo, caso seja o final do arquivo, retorna 1
         return 1;
