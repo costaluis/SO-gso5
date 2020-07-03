@@ -67,9 +67,9 @@ public:
 // Construtor parametrizado da classe pagina (atribui valores na construção)
 pagina::pagina(int id)
 {
-    process_id = id;
-    R = 0;
-    for(int i=0; i<PAG_SIZE; i++){
+    process_id = id;                    //id do processo a qual a pagina pertence
+    R = 0;                              //contador de uso pra o LRU
+    for(int i=0; i<PAG_SIZE; i++){      //preenchimeto do conteudo da pagina
         dados[i] = 'a'+i;
     }
 }
@@ -87,10 +87,10 @@ pagina::~pagina()
 // Construtor parametrizado  da classe processo (atribui valores na construção)
 processo::processo(int identificador, int tamanho)
 {
-    id = identificador;
-    tam = tamanho;
-    int num_pags = ceil(tamanho/PAG_SIZE);
-    for(int i=0; i<num_pags;i++){
+    id = identificador;                                     //numero identificador do processo
+    tam = tamanho;                                          //tamanho do processo
+    int num_pags = ceil(tamanho/PAG_SIZE);                  //número de paginas que o processo possuirá
+    for(int i=0; i<num_pags;i++){                           //alocação das paginas do processo
         paginas.push_back(new pagina(identificador));
     }
 }
@@ -130,7 +130,7 @@ void lista_circular::carrega_mem(processo * proc, pagina * pag, vector<processo*
     if(mem_p.size() < TAM_MEM_P/PAG_SIZE){                              // Verifica se a memoria primaria esta cheia
         cout << "   Memória principal não está cheia." << endl;         // Se nao estiver, carrega a pagina na memoria primaria
         mem_p.push_back(aux);
-        proc->tabela_paginas[pag] = aux;                                // Coloca a nova pagina na tebela de paginas do processo
+        proc->tabela_paginas[pag] = aux;                                // Coloca a nova pagina na tabela de paginas do processo
         cout << "   Página carregada na memória principal." << endl;
     }else{                                                              // Se estiver cheia, um dos algoritmos (indicado por flag) sera utilizado para substituir uma pagina
         int i, j;
@@ -271,23 +271,23 @@ void escreve(int iden, int end, vector<processo*> & processos, lista_circular & 
             aux = processos[i];
         }
     }
-    int pag = floor(end/PAG_SIZE);                  
-    int pos = end % PAG_SIZE;
+    int pag = floor(end/PAG_SIZE);                  //identifica qual pagina acessar
+    int pos = end % PAG_SIZE;                       //identifica qual a posição à acessar na pagina
     
-    aux2 = aux->paginas[pag];
-    if(aux->tabela_paginas[aux2] == NULL){
+    aux2 = aux->paginas[pag];                       //a pagina é passada por referencia à variável aux2
+    if(aux->tabela_paginas[aux2] == NULL){          //se a pagina não está na memória principal, ela é carregada para esta
         mem_p.carrega_mem(aux,aux2,processos,1);
-    }else{
+    }else{                                          //caso a pagina já esta em memória principal
         cout << "   Página já está na memória principal." << endl;
-        if(flag == 1){
+        if(flag == 1){                              //se está sendo usado o LRU o contador de uso da pagina é incrementado
             aux->tabela_paginas[aux2]->R++;
         }
     }
 
     dado = aux->tabela_paginas[aux2];
 
-    dado->dados[pos] = '*';
-    aux2->dados[pos] = '*';
+    dado->dados[pos] = '*';                         //escreve na memória secundaria
+    aux2->dados[pos] = '*';                         //escreve na memória primaria
     
     cout << "   Dado escrito: " << dado->dados[pos] << endl;
     cout << "   Atualização da memória secundária realizada." << endl;
@@ -390,5 +390,5 @@ int main(){
             break;
         }
     }
-    
+        
 }
