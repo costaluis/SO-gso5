@@ -98,6 +98,9 @@ processo::processo(int identificador, int tamanho)
 // Destrutor da classe processo
 processo::~processo()
 {
+    for(int i=0; i<paginas.size();i++){
+        delete paginas[i];
+    }
 }
 
 // Construtor da classe lista circular
@@ -108,6 +111,9 @@ lista_circular::lista_circular()
 // Destrutor da classe lista circular
 lista_circular::~lista_circular()
 {
+    for(int i=0; i<mem_p.size();i++){
+        delete(mem_p[i]);
+    }
 }
 
 // Construtor parametrizado da classe mem (atribui, na construção, um valor ao tamanho da memória)
@@ -390,5 +396,11 @@ int main(){
             break;
         }
     }
+    delete(mem_p);
+    for(int i=0; i<tabela_processos.size();i++){
+        delete tabela_processos[i];
+    }
+    fclose(arq);
+    return 0;
         
 }
