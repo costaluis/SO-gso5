@@ -1,0 +1,21 @@
+Esse projeto é referente ao trabalho III da disciplina de Sistemas Operacionais e os alunos responsáveis são: João Pedro Borges de Castro(10276720),
+João Pedro Fidelis Belluzzo(10716661) e Luis Fernando Costa de Oliveira(10716532). O objetivo é desenvolver um gerenciador de memória que utiliza paginação. 
+Como algoritmos de substituição de páginas, foram programados o LRU e o relógio.
+
+Para interagir com o programa, inicialmente defina o arquivo .txt de entrada. Cada linha é referente a uma instrução do gerenciador de memória, sendo que o padrão
+a ser seguido é:
+
+P'x' 'i' 'n' => onde 'x' é o id do processo, 'i' a instrução a ser realizada e 'n' o parâmetro da instrução (tamanho/endereço).
+
+As instruções disponíveis são: 
+  'C' - cria um processo (n = tamanho)
+  'R' - realiza operação de leitura (n = endereço lógico)
+  'W' - realiza operação de escrita (n = endereço lógico)
+  'I' - realiza instrução de IO (n = nro. da instrução)
+  'P' - realiza instrução de execução pelo CPU (n = nro. da instrução)
+  
+A cada operação, o programa esperará que o usuário digite ENTER para prosseguir, de forma a facilitar a análise dos resultados passo-a-passo.
+
+Em relação ao código, pode-se especificar os tamanhos da memórias e das páginas/molduras nas definições do início do código. Além disso, a variável flag
+que é passado como parâmatro para as funções que manipulam memória determina qual algoritmo de substituição de páginas será usado. Se flag = 1, o algoritmo LRU
+será executado. Caso flag = 0, o algoritmo do relógio será executado.
