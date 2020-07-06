@@ -1,4 +1,4 @@
-Esse projeto é referente ao trabalho III da disciplina de Sistemas Operacionais e os alunos responsáveis são: João Pedro Borges de Castro(10276720),
+Esse projeto é referente ao trabalho III da disciplina de Sistemas Operacionais e os alunos responsáveis, referentes ao grupo 5, são: João Pedro Borges de Castro(10276720),
 João Pedro Fidelis Belluzzo(10716661) e Luis Fernando Costa de Oliveira(10716532). O objetivo é desenvolver um gerenciador de memória que utiliza paginação. 
 Como algoritmos de substituição de páginas, foram programados o LRU e o relógio.
 
